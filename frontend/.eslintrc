@@ -1,0 +1,10 @@
+{
+    "extends": "airbnb",
+    "plugins": [
+        "unused-imports"
+    ],
+    "env": {
+        "browser": true,
+    },
+    "parser": "babel-eslint"
+}
