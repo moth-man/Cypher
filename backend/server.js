@@ -24,19 +24,15 @@ io.on('connection', client => {
 
   client.emit('greetings', 'Hey!', { 'ms': 'jane' }, Buffer.from([4, 3, 3, 1]));
 
-  // client.on('join-room', (roomId, userId) => {
-  //   client.join(roomId)
-  //   client.to(roomId).broadcast.emit('user-connected', userId);
-  //   // messages
-  //   client.on('message', (message) => {
-  //     //send message to the same room
-  //     io.to(roomId).emit('createMessage', message)
-  //   });
+  client.on('join-room', (roomId, userId) => {
+    console.log(roomId, userId)
+    client.join(roomId)
+    client.to(roomId).broadcast.emit('user-connected', userId);
 
-  //   client.on('disconnect', () => {
-  //     client.to(roomId).broadcast.emit('user-disconnected', userId)
-  //   })
-  // })
+    client.on('disconnect', () => {
+      client.to(roomId).broadcast.emit('user-disconnected', userId)
+    })
+  })
 })
 
 server.listen(3000)
