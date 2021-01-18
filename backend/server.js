@@ -1,26 +1,32 @@
+// Express
 const express = require('express')
 const app = express()
-// const cors = require('cors')
-// app.use(cors())
+
+// Socket io
 const server = require('http').Server(app)
-const io = require('socket.io')(server, {
-  cors: {
-    origin: "*"  }
-})
+const io = require('socket.io')(server, { cors: { origin: '*' } })
+
+// Peer
 const { ExpressPeerServer } = require('peer');
 const peerServer = ExpressPeerServer(server, {
   debug: true
 });
-// const { v4: uuidV4 } = require('uuid')
+
+// UUID
+const { v4: uuidV4 } = require('uuid')
 
 app.use('/peerjs', peerServer);
 
+
 io.on('connection', client => {
   client.on('message', console.log);
+  client.on('salutations', console.log);
+
+  client.emit('greetings', 'Hey!', { 'ms': 'jane' }, Buffer.from([4, 3, 3, 1]));
+
   client.on('join-room', (roomId, userId) => {
+    console.log(roomId, userId)
     client.join(roomId)
-    console.log("RoomID", roomId);
-    console.log("UserID", userId);
     client.to(roomId).broadcast.emit('user-connected', userId);
 
     client.on('disconnect', () => {
@@ -29,4 +35,4 @@ io.on('connection', client => {
   })
 })
 
-server.listen(process.env.PORT||3030)
+server.listen(3000)
