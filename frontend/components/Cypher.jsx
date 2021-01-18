@@ -38,11 +38,6 @@ export default function Cypher() {
       console.log('OPEN PEER', id);
     });
 
-    socket.on('connect', () => {
-      socket.emit('join-room', 'boobies', 1234);
-      console.log('CONNECTED');
-      socket.emit('message', 123456);
-    });
     // Us calling them.
     socket.on('user-connected', (userID) => {
       console.log('THIS USERID', userID);
