@@ -5,7 +5,7 @@ import io from 'socket.io-client';
 import App from './App';
 import { SocketContext } from './components/contexts';
 
-const socket = io('http://localhost:3030');
+const socket = io('http://localhost:3000');
 
 ReactDOM.render(
   <BrowserRouter>

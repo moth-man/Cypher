@@ -10,47 +10,44 @@ export default function Cypher() {
   const [streams, setStreams] = useState([]);
 
   useEffect(() => {
-    const socket = io('http://localhost:3030');
-
     (async function getStream() {
       setStreams([await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: false,
       })]);
     }());
-
-    const peer = new Peer(undefined, {
-      path: '/peerjs',
-      host: '/',
-      port: '3030',
-    });
-
-    // Them calling us.
-    peer.on('call', (call) => {
-      call.answer(streams[0]);
-      call.on('stream', (stream) => {
-        setStreams(streams.concat(stream));
-      });
-    });
-
-    peer.on('open', (id) => {
-      socket.emit('join-room', 'boobies', id);
-      console.log('OPEN PEER', id);
-    });
-
-    // Us calling them.
-    socket.on('user-connected', (userID) => {
-      console.log('THIS USERID', userID);
-      const call = peer.call(userID, streams[0]);
-      call.on('stream', (stream) => {
-        setStreams(streams.concat(stream));
-      });
-    });
   }, []);
 
   if (!streams.length) {
     return null;
   }
+
+  const socket = io('http://localhost:3000');
+  const peer = new Peer(undefined, {
+    path: '/peerjs',
+    host: '/',
+    port: '3000',
+  });
+
+  // Them calling us.
+  peer.on('call', (call) => {
+    call.answer(streams[0]);
+    call.on('stream', (stream) => {
+      setStreams(streams.concat(stream));
+    });
+  });
+
+  peer.on('open', (id) => {
+    socket.emit('join-room', 'User connected.', id);
+  });
+
+  // Us calling them.
+  socket.on('user-connected', (userID) => {
+    const call = peer.call(userID, streams[0]);
+    call.on('stream', (stream) => {
+      setStreams(streams.concat(stream));
+    });
+  });
 
   return (
     streams.map((stream) => <Stream stream={stream} />)
