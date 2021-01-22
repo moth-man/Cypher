@@ -11,58 +11,60 @@ export default function Cypher() {
 
   useEffect(() => {
     (async function getStream() {
-      setMyStream(await navigator.mediaDevices.getUserMedia({
+      const myStream = await navigator.mediaDevices.getUserMedia({
         video: true,
         audio: true,
-      }));
+      });
+
+      setMyStream(myStream);
+
+      const socket = io('https://stormy-garden-62568.herokuapp.com');
+
+      const peer = new Peer(undefined, {
+        path: '/peerjs',
+        host: 'stormy-garden-62568.herokuapp.com',
+        secure: true,
+        port: 443,
+      });
+
+      // Them calling us.
+      peer.on('call', (call) => {
+        call.answer(myStream);
+        call.on('stream', (stream) => {
+          setStreams((streams) => {
+            const newStreams = streams.filter((otherStream) => stream.id !== otherStream.id);
+            return [...newStreams, stream];
+          });
+        });
+      });
+
+      peer.on('open', (id) => {
+        socket.emit('join-room', 'User connected.', id);
+      });
+
+      // Us calling them.
+      socket.on('user-connected', (userID) => {
+        const call = peer.call(userID, myStream);
+        call.on('stream', (stream) => {
+          setStreams((streams) => {
+            const newStreams = streams.filter((otherStream) => stream.id !== otherStream.id);
+            return [...newStreams, stream];
+          });
+        });
+      });
     }());
   }, []);
-
-  useEffect(() => {
-    if (!myStream) return;
-
-    const socket = io('https://stormy-garden-62568.herokuapp.com');
-
-    const peer = new Peer(undefined, {
-      path: '/peerjs',
-      host: 'stormy-garden-62568.herokuapp.com',
-      secure: true,
-      port: 443
-    })
-
-
-    // Them calling us.
-    peer.on('call', (call) => {
-      call.answer(myStream);
-      call.on('stream', (stream) => {
-        setStreams((streams) => {
-          const newStreams = streams.filter(otherStream => stream.id !== otherStream.id)
-          return [...newStreams, stream]
-        })
-      });
-    });
-
-    peer.on('open', (id) => {
-      socket.emit('join-room', 'User connected.', id);
-    });
-
-    // Us calling them.
-    socket.on('user-connected', (userID) => {
-      const call = peer.call(userID, myStream);
-      call.on('stream', (stream) => {
-        setStreams((streams) => {
-          const newStreams = streams.filter(otherStream => stream.id !== otherStream.id)
-          return [...newStreams, stream]
-        })
-      });
-    });
-  }, [myStream]);
 
   if (!myStream) {
     return null;
   }
 
   return (
-    [myStream].concat(streams).map((stream) => <Stream stream={stream} />)
+    [myStream].concat(streams).map((stream) => (
+      <Stream
+        muted={stream.id === myStream.id}
+        stream={stream}
+      />
+    ))
   );
 }

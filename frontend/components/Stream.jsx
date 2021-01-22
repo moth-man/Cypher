@@ -1,8 +1,8 @@
-import React, { useEffect, useCallback, useState } from 'react';
-import { Box, Typography } from '@material-ui/core/';
-import { NavLink } from 'react-router-dom';
+import React, { useCallback } from 'react';
+import { Box } from '@material-ui/core/';
 
-export default function Stream({ stream }) {
+export default function Stream({ stream, muted }) {
+  console.log(stream, muted);
   const videoRef = useCallback((video) => {
     if (video !== null) {
       video.srcObject = stream;
@@ -14,7 +14,7 @@ export default function Stream({ stream }) {
 
   return (
     <Box>
-      <video muted autoPlay ref={videoRef} />
+      <video muted={muted} autoPlay ref={videoRef} />
     </Box>
   );
 }
