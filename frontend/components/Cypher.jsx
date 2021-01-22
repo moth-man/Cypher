@@ -21,7 +21,7 @@ export default function Cypher() {
   useEffect(() => {
     if (!myStream) return;
 
-    const socket = io('http://localhost:3000');
+    const socket = io('https://stormy-garden-62568.herokuapp.com:3000');
 
     const peer = new Peer(undefined, {
       path: '/peerjs',
