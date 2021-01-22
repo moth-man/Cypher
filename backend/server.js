@@ -2,6 +2,10 @@
 const express = require('express')
 const app = express()
 
+// Cors for Peer
+const cors = require('cors')
+app.use(cors())
+
 // Socket io
 const server = require('http').Server(app)
 const io = require('socket.io')(server, { cors: { origin: '*' } })

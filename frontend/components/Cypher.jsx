@@ -23,11 +23,12 @@ export default function Cypher() {
 
     const socket = io('https://stormy-garden-62568.herokuapp.com:3000');
 
-    const peer = new Peer(undefined, {
-      path: '/peerjs',
-      host: 'https://stormy-garden-62568.herokuapp.com',
-      port: '3000',
-    });
+    const peer = new Peer({
+      host: 'stormy-garden-62568.herokuapp.com', 
+      secure: true, 
+      port: 443
+    })
+
 
     // Them calling us.
     peer.on('call', (call) => {
