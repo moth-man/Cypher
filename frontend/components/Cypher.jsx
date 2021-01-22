@@ -13,7 +13,7 @@ export default function Cypher() {
     (async function getStream() {
       setMyStream(await navigator.mediaDevices.getUserMedia({
         video: true,
-        audio: false,
+        audio: true,
       }));
     }());
   }, []);
@@ -25,7 +25,7 @@ export default function Cypher() {
 
     const peer = new Peer(undefined, {
       path: '/peerjs',
-      host: '/',
+      host: 'https://stormy-garden-62568.herokuapp.com',
       port: '3000',
     });
 
