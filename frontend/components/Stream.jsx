@@ -14,7 +14,7 @@ export default function Stream({ stream }) {
 
   return (
     <Box>
-      <video muted ref={videoRef} />
+      <video muted autoPlay ref={videoRef} />
     </Box>
   );
 }

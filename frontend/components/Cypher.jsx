@@ -62,7 +62,6 @@ export default function Cypher() {
     return null;
   }
 
-  console.log('my stream', streams);
   return (
     [myStream].concat(streams).map((stream) => <Stream stream={stream} />)
   );
