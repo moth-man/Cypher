@@ -5,6 +5,7 @@ const app = express()
 // Cors for Peer
 const cors = require('cors')
 app.use(cors())
+app.options('*', cors());
 
 // Socket io
 const server = require('http').Server(app)
