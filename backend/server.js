@@ -4,7 +4,7 @@ const app = express()
 
 // Cors for Peer
 const cors = require('cors')
-app.use(cors())
+app.use(cors({origin: 'http://localhost:1234'}));
 app.options('*', cors());
 
 // Socket io
