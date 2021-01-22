@@ -9,7 +9,7 @@ app.options('*', cors());
 
 // Socket io
 const server = require('http').Server(app)
-const io = require('socket.io')(server, { cors: { origin: '*' } })
+const io = require('socket.io')(server, { cors: { origin: 'http://localhost:1234' } })
 
 // Peer
 const { ExpressPeerServer } = require('peer');
