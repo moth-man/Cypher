@@ -14,7 +14,7 @@ export default function Stream({ stream }) {
 
   return (
     <Box>
-      <video ref={videoRef} />
+      <video muted ref={videoRef} />
     </Box>
   );
 }

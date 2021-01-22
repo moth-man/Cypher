@@ -23,9 +23,10 @@ export default function Cypher() {
 
     const socket = io('https://stormy-garden-62568.herokuapp.com');
 
-    const peer = new Peer({
-      host: 'stormy-garden-62568.herokuapp.com', 
-      secure: true, 
+    const peer = new Peer(undefined, {
+      path: '/peerjs',
+      host: 'stormy-garden-62568.herokuapp.com',
+      secure: true,
       port: 443
     })
 
@@ -34,8 +35,10 @@ export default function Cypher() {
     peer.on('call', (call) => {
       call.answer(myStream);
       call.on('stream', (stream) => {
-        console.log('call from', stream);
-        setStreams((streams) => [...streams, stream])
+        setStreams((streams) => {
+          const newStreams = streams.filter(otherStream => stream.id !== otherStream.id)
+          return [...newStreams, stream]
+        })
       });
     });
 
@@ -47,8 +50,10 @@ export default function Cypher() {
     socket.on('user-connected', (userID) => {
       const call = peer.call(userID, myStream);
       call.on('stream', (stream) => {
-        console.log('call to', stream);
-        setStreams((streams) => [...streams, stream])
+        setStreams((streams) => {
+          const newStreams = streams.filter(otherStream => stream.id !== otherStream.id)
+          return [...newStreams, stream]
+        })
       });
     });
   }, [myStream]);
@@ -57,7 +62,7 @@ export default function Cypher() {
     return null;
   }
 
-  console.log('my stream', myStream);
+  console.log('my stream', streams);
   return (
     [myStream].concat(streams).map((stream) => <Stream stream={stream} />)
   );
