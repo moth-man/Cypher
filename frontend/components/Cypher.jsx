@@ -34,6 +34,7 @@ export default function Cypher() {
       call.answer(myStream);
       call.on('stream', (stream) => {
         console.log('call from', stream);
+        setStreams((streams) => [...streams, stream])
       });
     });
 
@@ -46,6 +47,7 @@ export default function Cypher() {
       const call = peer.call(userID, myStream);
       call.on('stream', (stream) => {
         console.log('call to', stream);
+        setStreams((streams) => [...streams, stream])
       });
     });
   }, [myStream]);

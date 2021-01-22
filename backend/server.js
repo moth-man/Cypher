@@ -12,8 +12,6 @@ const peerServer = ExpressPeerServer(server, {
   debug: true
 });
 
-// UUID
-// const { v4: uuidV4 } = require('uuid')
 
 app.use('/peerjs', peerServer);
 
